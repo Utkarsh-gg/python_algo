@@ -21,13 +21,13 @@ jobs:
             echo "::set-output name=type::check_in"
           fi
           
-      - name: Introduce Random Delay
-        id: random-delay
-        run: |
-          # Generate a random number between 0 and 300 seconds (0 to 5 minutes)
-          DELAY=$((RANDOM % 301))
-          echo "Sleeping for $DELAY seconds..."
-          sleep $DELAY
+      # - name: Introduce Random Delay
+      #   id: random-delay
+      #   run: |
+      #     # Generate a random number between 0 and 300 seconds (0 to 5 minutes)
+      #     DELAY=$((RANDOM % 301))
+      #     echo "Sleeping for $DELAY seconds..."
+      #     sleep $DELAY
 
       - name: Make Login Request
         id: login
@@ -43,4 +43,4 @@ jobs:
           curl -s -X POST https://mybuddy.botmantra.ai/backend/backend/postAttendance \
           -H "Content-Type: application/json" \
           -H "Authorization: Bearer ${{ steps.login.outputs.access_token }}" \
-          -d '{"emp_id": "0100","status": ${{ steps.type-check.outputs.type }},"work_type": "Work From Office","ip_address": "106.51.85.101"}'
+          -d '{"emp_id": "0100","status": "${{ steps.type-check.outputs.type }}","work_type": "Work From Office","ip_address": "106.51.85.101"}'
