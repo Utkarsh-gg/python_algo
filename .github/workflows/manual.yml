@@ -1,0 +1,57 @@
+name: Randomized Weekday API Requests
+
+on:
+  schedule:
+    - cron: '30,35,40,45,50,55 4 * * 1-5' # 10:00-10:30 IST on Monday to Friday
+    - cron: '5,10,15,20,25,30 13 * * 1-5' # 10:00-10:30 IST on Monday to Friday
+jobs:
+  random-trigger:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set Check Type
+        id: type-check
+        run: |
+          if [[ "${GITHUB_EVENT_SCHEDULE}" == "5,10,15,20,25,30 13 * * 1-5" ]]; then
+            echo "Triggered by second schedule"
+            echo "::set-output name=type::check_out"
+          else
+            echo "Triggered by first schedule"
+            echo "::set-output name=type::check_in"
+          fi
+          
+      - name: Random Time Check
+        id: random-check
+        run: |
+          if [ $((RANDOM % 6)) -ne 0 ]; then
+            echo "Exiting early"
+            exit 0
+          fi
+          echo "Proceeding with API requests"
+          
+      - name: Introduce Random Delay
+        if: steps.random-check.conclusion == 'success'
+        id: random-delay
+        run: |
+          # Generate a random number between 0 and 300 seconds (0 to 5 minutes)
+          DELAY=$((RANDOM % 301))
+          echo "Sleeping for $DELAY seconds..."
+          sleep $DELAY
+
+      - name: Make Login Request
+        if: steps.random-check.conclusion == 'success'
+        id: login
+        run: |
+          response=$(curl -s -X POST https://mybuddy.botmantra.ai/backend/backend/login -H "Content-Type: application/json" -d '{"email": "utkarsh.sao@botmantra.com","password": "password"}')
+          echo "Response: $response"
+          token=$(echo $response | jq -r '.access_token')
+          echo "Access Token: $token"
+          echo "::set-output name=access_token::$token"
+
+      - name: Post Attendance
+        if: steps.random-check.conclusion == 'success'
+        run: |
+          curl -s -X POST https://mybuddy.botmantra.ai/backend/backend/postAttendance \
+          -H "Content-Type: application/json" \
+          -H "Authorization: Bearer ${{ steps.login.outputs.access_token }}" \
+          -d '{"emp_id": "0100","status": ${{ steps.type-check.outputs.type }},"work_type": "Work From Office","ip_address": "106.51.85.101"}'
