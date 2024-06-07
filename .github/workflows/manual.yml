@@ -40,15 +40,15 @@ jobs:
 
       - name: Post Attendance
         run: |
-          # curl -s -X POST https://mybuddy.botmantra.ai/backend/backend/postAttendance \
-          # -H "Content-Type: application/json" \
-          # -H "Authorization: Bearer ${{ steps.login.outputs.access_token }}" \
-          # -d '{"emp_id": "0100","status": "${{ steps.type-check.outputs.type }}","work_type": "Work From Office","ip_address": "106.51.85.101"}'
-          
-          echo "current_date=$(date -u +"%d-%m-%Y")" >> $GITHUB_ENV
-          
-          curl -s -X POST https://mybuddy.botmantra.ai/backend/backend/createTimesheet \
+          curl -s -X POST https://mybuddy.botmantra.ai/backend/backend/postAttendance \
           -H "Content-Type: application/json" \
           -H "Authorization: Bearer ${{ steps.login.outputs.access_token }}" \
-          -d '{"emp_id":"0101","timesheet_date":"${{ env.current_date }}","details":[{"wbs_id":"WsBO5Ge2Ztclf776Qvrw7","wbs_code":"P23-PEAKALPHA","wbs_description":"Peak Alpha","wbs_percentage":100}]}'
+          -d '{"emp_id": "0100","status": "${{ steps.type-check.outputs.type }}","work_type": "Work From Office","ip_address": "106.51.85.101"}'
+          
+          # echo "current_date=$(date -u +"%d-%m-%Y")" >> $GITHUB_ENV
+          
+          # curl -s -X POST https://mybuddy.botmantra.ai/backend/backend/createTimesheet \
+          # -H "Content-Type: application/json" \
+          # -H "Authorization: Bearer ${{ steps.login.outputs.access_token }}" \
+          # -d '{"emp_id":"0101","timesheet_date":"${{ env.current_date }}","details":[{"wbs_id":"WsBO5Ge2Ztclf776Qvrw7","wbs_code":"P23-PEAKALPHA","wbs_description":"Peak Alpha","wbs_percentage":100}]}'
           
