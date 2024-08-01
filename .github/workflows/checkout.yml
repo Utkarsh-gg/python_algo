@@ -1,4 +1,4 @@
-name: Randomized Weekday API Requests 1
+name: Checkout
 
 on:
   workflow_dispatch:
