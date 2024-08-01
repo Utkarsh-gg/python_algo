@@ -1,4 +1,4 @@
-name: Randomized Weekday API Requests
+name:  CheckIn
 
 on:
   workflow_dispatch:
