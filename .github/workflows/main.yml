@@ -1,0 +1,29 @@
+name: Randomized Weekday API Requests 1
+
+on:
+  workflow_dispatch:
+  schedule:
+    # - cron: '45 4 * * 1-5' # 10:00-10:30 IST on Monday to Friday
+    - cron: '15 13 * * 1-5' # 10:00-10:30 IST on Monday to Friday
+jobs:
+  random-trigger:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Make Login Request
+        id: login
+        run: |
+          response=$(curl -s -X POST https://mybuddy.botmantra.ai/backend/backend/login -H "Content-Type: application/json" -d '{"email": "utkarsh.sao@botmantra.com","password": "password"}')
+          echo "Response: $response"
+          token=$(echo $response | jq -r '.access_token')
+          echo "Access Token: $token"
+          echo "::set-output name=access_token::$token"
+
+      - name: Post Attendance
+        run: |
+          curl -s -X POST https://mybuddy.botmantra.ai/backend/backend/postAttendance \
+          -H "Content-Type: application/json" \
+          -H "Authorization: Bearer ${{ steps.login.outputs.access_token }}" \
+          -d '{"emp_id": "0100","status": "check_out","work_type": "Work From Office","ip_address": "106.51.85.101"}'
+          
