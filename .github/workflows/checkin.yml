@@ -1,15 +1,23 @@
-name:  CheckIn
+name: CheckIn
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '45 4 * * 1-5' # 10:00-10:30 IST on Monday to Friday
-    # - cron: '15 13 * * 1-5' # 10:00-10:30 IST on Monday to Friday
+    - cron: '25 4 * * 1-5' # Random time between 9:50-10:10 AM IST on Monday to Friday
+
 jobs:
   random-trigger:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set Up Random Delay
+        id: random-delay
+        run: |
+          # Generate a random number between 60 and 300 (1 to 5 minutes in seconds)
+          delay=$((RANDOM % 241 + 60))
+          echo "Sleeping for $delay seconds"
+          sleep $delay
+          echo "::set-output name=delay::$delay"
 
       - name: Make Login Request
         id: login
@@ -26,4 +34,3 @@ jobs:
           -H "Content-Type: application/json" \
           -H "Authorization: Bearer ${{ steps.login.outputs.access_token }}" \
           -d '{"emp_id": "0100","status": "check_in","work_type": "Work From Office","ip_address": "106.51.85.101"}'
-          
