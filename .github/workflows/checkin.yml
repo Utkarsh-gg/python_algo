@@ -3,7 +3,7 @@ name: CheckIn
 on:
   workflow_dispatch:
   schedule:
-    - cron: '25 4 * * 1-5' # Random time between 9:50-10:10 AM IST on Monday to Friday
+    - cron: '40 4 * * 1-5' # Random time between 9:50-10:10 AM IST on Monday to Friday
 
 jobs:
   random-trigger:
