@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   schedule:
     # Randomize the cron schedule if needed, but currently fixed as per your setup
-    - cron: '15 13 * * 1-5' # 6:45 PM UTC on Monday to Friday (12:15 AM IST next day)
+    - cron: '00 13 * * 1-5' # 6:45 PM UTC on Monday to Friday (12:15 AM IST next day)
 
 jobs:
   random-trigger:
